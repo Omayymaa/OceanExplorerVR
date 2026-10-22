@@ -8,6 +8,7 @@ TagManager:
   - Fish
   - Trash
   - Species
+  - Diver
   layers:
   - Default
   - TransparentFX
