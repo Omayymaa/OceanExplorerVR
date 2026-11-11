@@ -30,6 +30,11 @@ namespace OceanExplorer.Module2
         public float minSpacing = 3f;
         public NavMeshSurface surface;
 
+        [Header("Éviter les chevauchements")]
+        public float crabClearRadius = 0.6f;     // Place libre exigée autour d'un crabe (m)
+        public float turtleClearRadius = 1.5f;   // Place libre exigée autour d'une tortue (m)
+        public LayerMask obstacleMask = ~0;      // Couches considérées comme obstacles (tout par défaut)
+
         void Start()
         {
             Respawn();
@@ -38,8 +43,8 @@ namespace OceanExplorer.Module2
         public void Respawn()
         {
             SpawnFish();
-            SpawnOnSeabed(crabPrefabs, crabCount);
-            SpawnOnSeabed(turtlePrefabs, turtleCount);
+            SpawnOnSeabed(crabPrefabs, crabCount, crabClearRadius);
+            SpawnOnSeabed(turtlePrefabs, turtleCount, turtleClearRadius);
         }
 
         List<GameObject> GetValidPrefabs(GameObject[] prefabs)
@@ -92,11 +97,34 @@ namespace OceanExplorer.Module2
 
                 GameObject fish = Instantiate(prefab, pos, Quaternion.identity, transform);
                 M2_FishSwim swim = fish.GetComponent<M2_FishSwim>();
-                if (swim != null) swim.speed = Random.Range(2f, 5f);
+                if (swim != null)
+                {
+                    swim.speed = Random.Range(1f, 2.5f);               // Vitesse calme et réaliste
+                    if (prefab.name == "Seahorse") swim.speed = 0.4f;  // L'hippocampe nage très lentement
+                    swim.areaMin = areaMin;                            // Zone de nage = zone de départ
+                    swim.areaMax = areaMax;
+                }
             }
         }
 
-        void SpawnOnSeabed(GameObject[] prefabs, int count)
+        // Hauteur du sol à (x, z) en cherchant le terrain qui contient ce point
+        bool TryGetGroundHeight(float x, float z, out float y)
+        {
+            foreach (Terrain t in Terrain.activeTerrains)
+            {
+                Vector3 p = t.transform.position;
+                Vector3 s = t.terrainData.size;
+                if (x >= p.x && x <= p.x + s.x && z >= p.z && z <= p.z + s.z)
+                {
+                    y = t.SampleHeight(new Vector3(x, 0, z)) + p.y;
+                    return true;
+                }
+            }
+            y = 10f;
+            return false;
+        }
+
+        void SpawnOnSeabed(GameObject[] prefabs, int count, float clearRadius)
         {
             if (count <= 0) return;
 
@@ -108,11 +136,10 @@ namespace OceanExplorer.Module2
             }
 
             Vector3 c = center != null ? center.position : new Vector3(50, 10, 25);
-            Terrain terrain = Terrain.activeTerrain;
             List<Vector3> placed = new List<Vector3>();
             int spawned = 0;
 
-            for (int attempt = 0; attempt < 400 && spawned < sequence.Count; attempt++)
+            for (int attempt = 0; attempt < 1000 && spawned < sequence.Count; attempt++)
             {
                 float x, z;
                 if (wholeMap)
@@ -123,23 +150,27 @@ namespace OceanExplorer.Module2
                 else
                 {
                     Vector2 r = Random.insideUnitCircle * spawnRadius;
-                    x = Mathf.Clamp(c.x + r.x, 5f, 95f);
-                    z = Mathf.Clamp(c.z + r.y, 5f, 95f);
+                    x = c.x + r.x;
+                    z = c.z + r.y;
                 }
 
-                float groundY = terrain != null
-                    ? terrain.SampleHeight(new Vector3(x, 0, z)) + terrain.transform.position.y
-                    : 10f;
+                TryGetGroundHeight(x, z, out float groundY);
 
                 if (!NavMesh.SamplePosition(new Vector3(x, groundY, z), out NavMeshHit hit, 3f, NavMesh.AllAreas))
                     continue;
 
+                // Distance minimale avec les animaux déjà placés
                 bool tooClose = false;
                 foreach (Vector3 p in placed)
                 {
                     if (Vector3.Distance(p, hit.position) < minSpacing) { tooClose = true; break; }
                 }
                 if (tooClose) continue;
+
+                // Rejette l'endroit si un objet solide (rocher, corail...) occupe déjà la place
+                Vector3 checkPos = hit.position + Vector3.up * (clearRadius + 0.2f);
+                if (Physics.CheckSphere(checkPos, clearRadius, obstacleMask, QueryTriggerInteraction.Ignore))
+                    continue;
 
                 GameObject animal = Instantiate(sequence[spawned], hit.position, Quaternion.identity, transform);
                 NavMeshAgent agent = animal.GetComponent<NavMeshAgent>();

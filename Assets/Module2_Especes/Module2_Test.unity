@@ -17,7 +17,7 @@ RenderSettings:
   m_Fog: 1
   m_FogColor: {r: 0.039215688, g: 0.3529412, b: 0.5882353, a: 1}
   m_FogMode: 2
-  m_FogDensity: 0.03
+  m_FogDensity: 0.02
   m_LinearFogStart: 0
   m_LinearFogEnd: 300
   m_AmbientSkyColor: {r: 0.15686275, g: 0.5882353, b: 0.78431374, a: 1}
@@ -1338,8 +1338,8 @@ MonoBehaviour:
   leaderSpeed: 1.5
   followSpeed: 3
   turnSpeed: 3
-  areaMin: {x: -90, y: 12, z: -90}
-  areaMax: {x: 190, y: 22, z: 190}
+  areaMin: {x: -90, y: 28, z: -90}
+  areaMax: {x: 190, y: 28, z: 190}
 --- !u!4 &387795178
 Transform:
   m_ObjectHideFlags: 0
@@ -5050,8 +5050,8 @@ MonoBehaviour:
   leaderSpeed: 1.5
   followSpeed: 3
   turnSpeed: 3
-  areaMin: {x: -90, y: 12, z: -90}
-  areaMax: {x: 190, y: 22, z: 190}
+  areaMin: {x: -90, y: 24, z: -90}
+  areaMax: {x: 190, y: 28, z: 190}
 --- !u!4 &741172759
 Transform:
   m_ObjectHideFlags: 0
@@ -6422,8 +6422,8 @@ MonoBehaviour:
   leaderSpeed: 1.5
   followSpeed: 3
   turnSpeed: 3
-  areaMin: {x: -90, y: 12, z: -90}
-  areaMax: {x: 190, y: 22, z: 190}
+  areaMin: {x: -90, y: 28, z: -90}
+  areaMax: {x: 190, y: 28, z: 190}
 --- !u!4 &1203807263
 Transform:
   m_ObjectHideFlags: 0
@@ -6826,8 +6826,8 @@ MonoBehaviour:
   leaderSpeed: 1.5
   followSpeed: 3
   turnSpeed: 3
-  areaMin: {x: -90, y: 12, z: -90}
-  areaMax: {x: 190, y: 22, z: 190}
+  areaMin: {x: -90, y: 20, z: -90}
+  areaMax: {x: 190, y: 28, z: 190}
 --- !u!4 &1280653359
 Transform:
   m_ObjectHideFlags: 0
@@ -11536,18 +11536,23 @@ MonoBehaviour:
   - {fileID: 1840946921741325816, guid: 1b8bf38a9f952d54798b18002c0c0e08, type: 3}
   turtlePrefabs:
   - {fileID: 8724864798623519679, guid: 31cb0dfcf0457c844b87e82bf4fea6b7, type: 3}
-  fishCount: 90
+  fishCount: 200
   crabCount: 35
   turtleCount: 15
-  areaMin: {x: -90, y: 11, z: -90}
-  areaMax: {x: 190, y: 20, z: 190}
+  areaMin: {x: -90, y: 12, z: -90}
+  areaMax: {x: 190, y: 28, z: 190}
   wholeMap: 1
   mapMin: -40
   mapMax: 140
   center: {fileID: 95051141}
   spawnRadius: 35
-  minSpacing: 3
+  minSpacing: 6
   surface: {fileID: 1131074141}
+  crabClearRadius: 0.6
+  turtleClearRadius: 2
+  obstacleMask:
+    serializedVersion: 2
+    m_Bits: 4294967295
 --- !u!114 &1830458030
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -11671,8 +11676,8 @@ MonoBehaviour:
   leaderSpeed: 1.5
   followSpeed: 3
   turnSpeed: 3
-  areaMin: {x: -90, y: 12, z: -90}
-  areaMax: {x: 190, y: 22, z: 190}
+  areaMin: {x: -90, y: 20, z: -90}
+  areaMax: {x: 190, y: 28, z: 190}
 --- !u!4 &1846948471
 Transform:
   m_ObjectHideFlags: 0
@@ -12591,7 +12596,7 @@ MonoBehaviour:
   crabCount: 0
   turtleCount: 0
   areaMin: {x: -90, y: 12, z: -90}
-  areaMax: {x: 190, y: 22, z: 190}
+  areaMax: {x: 190, y: 28, z: 190}
   wholeMap: 1
   mapMin: -90
   mapMax: 190
@@ -12599,6 +12604,11 @@ MonoBehaviour:
   spawnRadius: 35
   minSpacing: 3
   surface: {fileID: 1131074141}
+  crabClearRadius: 0.6
+  turtleClearRadius: 1.5
+  obstacleMask:
+    serializedVersion: 2
+    m_Bits: 4294967295
 --- !u!4 &2015654492
 Transform:
   m_ObjectHideFlags: 0

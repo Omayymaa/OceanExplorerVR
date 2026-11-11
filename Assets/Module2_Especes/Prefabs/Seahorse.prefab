@@ -12,7 +12,6 @@ GameObject:
   - component: {fileID: 732617717116810252}
   - component: {fileID: 4252949392797002791}
   - component: {fileID: 4342200673553874916}
-  - component: {fileID: 5828030901371583619}
   m_Layer: 0
   m_Name: Seahorse
   m_TagString: Fish
@@ -86,23 +85,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::OceanExplorer.Common.SpeciesData
   nom: Hippocampe
-  taille: 10
-  protege: 0
-  description: 
---- !u!114 &5828030901371583619
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3940509100510069911}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: eef3c0ce00bf13e4bb29fc469cbbc7fc, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::OceanExplorer.Common.SpeciesData
-  nom: "Esp\xE8ce"
-  taille: 10
+  taille: 15
   protege: 0
   description: 
 --- !u!1001 &8445332132121462117

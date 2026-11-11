@@ -51,10 +51,6 @@ MonoBehaviour:
   turnSpeed: 1.5
   areaMin: {x: 10, y: 15, z: 10}
   areaMax: {x: 90, y: 25, z: 90}
-  arriveDistance: 2
-  maxPitch: 0.35
-  wobbleAngle: 4
-  wobbleFrequency: 1.2
 --- !u!135 &2876578765911521413
 SphereCollider:
   m_ObjectHideFlags: 0
@@ -74,7 +70,7 @@ SphereCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Radius: 0.5
+  m_Radius: 1
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!114 &3728080506345725993
 MonoBehaviour:
@@ -155,15 +151,6 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 7660056815385157646, guid: 35b7195a6107d514e842806a72d31d57, type: 3}
       insertIndex: -1
       addedObject: {fileID: 6224244661141782987}
-    - targetCorrespondingSourceObject: {fileID: 7660056815385157646, guid: 35b7195a6107d514e842806a72d31d57, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 1542646390745092623}
-    - targetCorrespondingSourceObject: {fileID: 7660056815385157646, guid: 35b7195a6107d514e842806a72d31d57, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 5150774287345077457}
-    - targetCorrespondingSourceObject: {fileID: 7660056815385157646, guid: 35b7195a6107d514e842806a72d31d57, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 8284302592505611051}
   m_SourcePrefab: {fileID: 100100000, guid: 35b7195a6107d514e842806a72d31d57, type: 3}
 --- !u!1 &2504574568839808080 stripped
 GameObject:
@@ -186,63 +173,6 @@ MonoBehaviour:
   tailAngle: 25
   speed: 6
   axis: {x: 0, y: 1, z: 0}
---- !u!114 &1542646390745092623
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2504574568839808080}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: cee9da7905200c04c92b48dff074d1ff, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::OceanExplorer.Module2.M2_FishSwim
-  speed: 3
-  turnSpeed: 2
-  areaMin: {x: 10, y: 15, z: 10}
-  areaMax: {x: 90, y: 25, z: 90}
-  arriveDistance: 2
-  maxPitch: 0.35
-  wobbleAngle: 6
-  wobbleFrequency: 2.5
---- !u!135 &5150774287345077457
-SphereCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2504574568839808080}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 1
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Radius: 1
-  m_Center: {x: 0, y: 0.06758158, z: 0.0900206}
---- !u!114 &8284302592505611051
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2504574568839808080}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: eef3c0ce00bf13e4bb29fc469cbbc7fc, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::OceanExplorer.Common.SpeciesData
-  nom: Poisson rouge
-  taille: 25
-  protege: 0
-  description: 
 --- !u!4 &6774702183243503174 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 1624506335958790680, guid: 35b7195a6107d514e842806a72d31d57, type: 3}

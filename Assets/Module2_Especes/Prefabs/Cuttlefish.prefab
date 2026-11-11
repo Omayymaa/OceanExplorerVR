@@ -101,8 +101,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: eef3c0ce00bf13e4bb29fc469cbbc7fc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::OceanExplorer.Common.SpeciesData
-  nom: Cuttlefish
-  taille: 10
+  nom: Seiche
+  taille: 30
   protege: 0
   description: 
 --- !u!1001 &1298852696488899423

@@ -91,7 +91,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: eef3c0ce00bf13e4bb29fc469cbbc7fc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::OceanExplorer.Common.SpeciesData
-  nom: Turtle
+  nom: Tortue
   taille: 100
   protege: 1
   description: 
