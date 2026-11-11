@@ -25,8 +25,20 @@ namespace OceanExplorer.Module2
                 return;
             }
 
+            // Calcule la rotation nécessaire pour orienter l'objet
+            // dans la direction du vecteur dir.
             Quaternion look = Quaternion.LookRotation(dir);
-            transform.rotation = Quaternion.Slerp(transform.rotation, look, turnSpeed * Time.deltaTime);
+
+            // Effectue une rotation progressive et fluide de l'objet
+            // depuis sa rotation actuelle vers la rotation cible look.
+            transform.rotation = Quaternion.Slerp(
+                transform.rotation,
+                look,
+                turnSpeed * Time.deltaTime
+            );
+
+            // Déplace l'objet vers l'avant selon son orientation actuelle,
+            // à une vitesse speed, indépendamment du nombre de FPS.
             transform.position += transform.forward * speed * Time.deltaTime;
         }
 

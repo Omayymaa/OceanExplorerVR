@@ -1,0 +1,198 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &7420889078183242470
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 4941740481886840492}
+  m_Layer: 0
+  m_Name: Fish_Low
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &4941740481886840492
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7420889078183242470}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 50, y: 14, z: 25}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 7212384282319055957}
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1001 &9051777263057193221
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 4941740481886840492}
+    m_Modifications:
+    - target: {fileID: 1351650055856586730, guid: c3c1fca234566aa4da044bb1301708ea, type: 3}
+      propertyPath: m_Name
+      value: BabyPutterfish_Rigged_Unity
+      objectReference: {fileID: 0}
+    - target: {fileID: 1351650055856586730, guid: c3c1fca234566aa4da044bb1301708ea, type: 3}
+      propertyPath: m_TagString
+      value: Fish
+      objectReference: {fileID: 0}
+    - target: {fileID: 1840237479790617936, guid: c3c1fca234566aa4da044bb1301708ea, type: 3}
+      propertyPath: m_LocalScale.x
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 1840237479790617936, guid: c3c1fca234566aa4da044bb1301708ea, type: 3}
+      propertyPath: m_LocalScale.y
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 1840237479790617936, guid: c3c1fca234566aa4da044bb1301708ea, type: 3}
+      propertyPath: m_LocalScale.z
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 1840237479790617936, guid: c3c1fca234566aa4da044bb1301708ea, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1840237479790617936, guid: c3c1fca234566aa4da044bb1301708ea, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1840237479790617936, guid: c3c1fca234566aa4da044bb1301708ea, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1840237479790617936, guid: c3c1fca234566aa4da044bb1301708ea, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1840237479790617936, guid: c3c1fca234566aa4da044bb1301708ea, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1840237479790617936, guid: c3c1fca234566aa4da044bb1301708ea, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1840237479790617936, guid: c3c1fca234566aa4da044bb1301708ea, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1840237479790617936, guid: c3c1fca234566aa4da044bb1301708ea, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1840237479790617936, guid: c3c1fca234566aa4da044bb1301708ea, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1840237479790617936, guid: c3c1fca234566aa4da044bb1301708ea, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 1351650055856586730, guid: c3c1fca234566aa4da044bb1301708ea, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 2848313045157734676}
+    - targetCorrespondingSourceObject: {fileID: 1351650055856586730, guid: c3c1fca234566aa4da044bb1301708ea, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 6973751808123065571}
+    - targetCorrespondingSourceObject: {fileID: 1351650055856586730, guid: c3c1fca234566aa4da044bb1301708ea, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 3791045605484053546}
+    - targetCorrespondingSourceObject: {fileID: 1351650055856586730, guid: c3c1fca234566aa4da044bb1301708ea, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 3442668848127166148}
+  m_SourcePrefab: {fileID: 100100000, guid: c3c1fca234566aa4da044bb1301708ea, type: 3}
+--- !u!4 &7212384282319055957 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 1840237479790617936, guid: c3c1fca234566aa4da044bb1301708ea, type: 3}
+  m_PrefabInstance: {fileID: 9051777263057193221}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &8024387481007601391 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 1351650055856586730, guid: c3c1fca234566aa4da044bb1301708ea, type: 3}
+  m_PrefabInstance: {fileID: 9051777263057193221}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &2848313045157734676
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8024387481007601391}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a3d753aa731159746a7429f7fa4c25f5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::OceanExplorer.Module2.M2_FishWiggle
+  bodyAngle: 12
+  tailAngle: 25
+  speed: 6
+  axis: {x: 0, y: 1, z: 0}
+--- !u!114 &6973751808123065571
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8024387481007601391}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cee9da7905200c04c92b48dff074d1ff, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::OceanExplorer.Module2.M2_FishSwim
+  speed: 3
+  turnSpeed: 2
+  areaMin: {x: 10, y: 15, z: 10}
+  areaMax: {x: 90, y: 25, z: 90}
+--- !u!135 &3791045605484053546
+SphereCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8024387481007601391}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 1
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Radius: 1
+  m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &3442668848127166148
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8024387481007601391}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: eef3c0ce00bf13e4bb29fc469cbbc7fc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::OceanExplorer.Common.SpeciesData
+  nom: Poisson-globe
+  taille: 15
+  protege: 0
+  description: 
