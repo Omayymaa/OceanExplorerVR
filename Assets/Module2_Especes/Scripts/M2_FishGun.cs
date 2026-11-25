@@ -10,10 +10,27 @@ namespace OceanExplorer.Module2
     public class M2_FishGun : MonoBehaviour
     {
         [Header("Visée")]
-        public Camera cam;                 // Caméra du plongeur (Main Camera)
+        public Camera cam;                 // Caméra du plongeur (Main Camera du XR Rig)
         public Transform gun;              // Le modèle du pistolet (Harpoon_Low)
-        public RectTransform crosshair;    // Le point blanc affiché à l'écran
+        public RectTransform crosshair;    // Le point blanc affiché à l'écran (mode classique)
         public float range = 30f;          // Portée maximale du tir (en mètres)
+
+        // [VR] Visée et tir avec le contrôleur droit
+        [Header("VR (contrôleur droit)")]
+        [Tooltip("Coché : on vise avec le contrôleur droit et on tire avec la gâchette.")]
+        public bool vrMode = true;
+        [Tooltip("Right Controller du XR Rig. Auto-détecté si vide.")]
+        public Transform aimSource;
+        [Tooltip("Action de tir : XRI Right Interaction/Activate (gâchette).")]
+        public InputActionReference triggerAction;
+        [Tooltip("Cache le modèle 3D du contrôleur : le harpon le remplace.")]
+        public bool hideControllerModel = true;
+        [Tooltip("Position du harpon par rapport au contrôleur.")]
+        public Vector3 gunLocalPosition = new Vector3(0f, 0f, 0.1f);
+        [Tooltip("Rotation du harpon par rapport au contrôleur (si mal orienté).")]
+        public Vector3 gunLocalEuler = Vector3.zero;
+        [Tooltip("Tags des animaux pêchables (le crabe est inclus).")]
+        public string[] catchableTags = { "Fish", "Crab" };
 
         [Header("Interface")]
         public TMP_Text messageText;       // Message de tir (Pêché, Raté...)
@@ -58,6 +75,41 @@ namespace OceanExplorer.Module2
                 messageBaseScale = messageText.transform.localScale;   // Mémorise la taille normale
             }
             if (tracer != null) tracer.enabled = false;   // Le trait est éteint au départ
+
+            // [VR] Retrouve le contrôleur droit s'il n'est pas assigné
+            if (vrMode && aimSource == null)
+            {
+                foreach (var t in GetComponentsInChildren<Transform>(true))
+                    if (t.name == "Right Controller") { aimSource = t; break; }
+            }
+
+            // [VR] Le viseur écran est inutile : le rayon du contrôleur le remplace
+            if (vrMode && crosshair != null) crosshair.gameObject.SetActive(false);
+
+            // [VR] Le harpon suit le contrôleur droit
+            if (UseController())
+            {
+                if (gun != null)
+                {
+                    Vector3 s = gun.localScale;                  // Garde la taille du harpon
+                    gun.SetParent(aimSource, false);             // Le harpon devient enfant du contrôleur
+                    gun.localPosition = gunLocalPosition;
+                    gun.localRotation = Quaternion.Euler(gunLocalEuler);
+                    gun.localScale = s;
+                    foreach (var r in gun.GetComponentsInChildren<Renderer>(true)) r.enabled = true;
+                }
+
+                // Cache le modèle du contrôleur (pas le rayon) pour voir le harpon à la place
+                if (hideControllerModel)
+                    foreach (var r in aimSource.GetComponentsInChildren<Renderer>(true))
+                        if ((r is MeshRenderer || r is SkinnedMeshRenderer)
+                            && (gun == null || !r.transform.IsChildOf(gun)))
+                            r.enabled = false;
+            }
+
+            // [VR] S'assure que l'action de la gâchette est active
+            if (triggerAction != null && triggerAction.action != null && !triggerAction.action.enabled)
+                triggerAction.action.Enable();
 
             // Crée le lecteur audio (son 2D, pas de lecture automatique)
             audioSource = gameObject.AddComponent<AudioSource>();
@@ -130,9 +182,26 @@ namespace OceanExplorer.Module2
             return clip;
         }
 
+        // Un animal est pêchable si son tag fait partie de la liste (Fish, Crab...)
+        bool IsCatchable(SpeciesData d)
+        {
+            foreach (var t in catchableTags)
+                if (d.gameObject.tag == t) return true;
+            return false;
+        }
+
+        // [VR] Vrai si on vise avec le contrôleur
+        bool UseController()
+        {
+            return vrMode && aimSource != null;
+        }
+
         // Position de la pointe du pistolet (départ du trait)
         Vector3 GunTip()
         {
+            // [VR] Le trait part du bout du contrôleur droit
+            if (UseController()) return aimSource.position + aimSource.forward * tipDistance;
+
             return gun != null
                 ? gun.position + gun.forward * tipDistance
                 : cam.transform.position;
@@ -142,10 +211,22 @@ namespace OceanExplorer.Module2
         // Retourne true si quelque chose est touché (hit) et donne le point visé (aimPoint).
         bool Aim(out RaycastHit hit, out Vector3 aimPoint)
         {
-            Vector3 origin = gun != null ? gun.position : cam.transform.position;
-            Vector3 dir = cam.transform.forward;
+            Vector3 origin;
+            Vector3 dir;
 
-            // On ignore les colliders du plongeur lui-même, puis on garde le plus proche
+            if (UseController())
+            {
+                // [VR] On vise dans la direction avant du contrôleur (transform.forward)
+                origin = aimSource.position;
+                dir = aimSource.forward;
+            }
+            else
+            {
+                origin = gun != null ? gun.position : cam.transform.position;
+                dir = cam.transform.forward;
+            }
+
+            // On ignore les colliders du plongeur lui-même (rig compris), puis on garde le plus proche
             var hits = Physics.RaycastAll(origin, dir, range, ~0, QueryTriggerInteraction.Collide)
                               .Where(h => !h.collider.transform.IsChildOf(transform))
                               .OrderBy(h => h.distance).ToArray();
@@ -185,6 +266,15 @@ namespace OceanExplorer.Module2
             messageText.color = c;
         }
 
+        // [VR] Vrai si la gâchette vient d'être pressée (le clic gauche reste possible en secours)
+        bool FirePressed()
+        {
+            bool trigger = triggerAction != null && triggerAction.action != null
+                           && triggerAction.action.WasPressedThisFrame();
+            bool click = Mouse.current != null && Mouse.current.leftButton.wasPressedThisFrame;
+            return trigger || click;
+        }
+
         void Update()
         {
             // Anime le message (zoom + fondu)
@@ -205,15 +295,15 @@ namespace OceanExplorer.Module2
             // Calcule la visée à chaque image
             bool found = Aim(out RaycastHit hit, out Vector3 aimPoint);
 
-            // Place le point blanc à l'endroit visé par le pistolet
-            if (crosshair != null)
+            // Place le point blanc à l'endroit visé (mode classique uniquement)
+            if (crosshair != null && !vrMode)
             {
                 Vector3 sp = cam.WorldToScreenPoint(aimPoint);
                 if (sp.z > 0f) crosshair.position = sp;
             }
 
-            // Tir au clic gauche
-            if (Mouse.current == null || !Mouse.current.leftButton.wasPressedThisFrame) return;
+            // Tir : gâchette du contrôleur droit (ou clic gauche)
+            if (!FirePressed()) return;
 
             // Joue le son de tir
             if (audioSource != null && shotSound != null)
@@ -228,7 +318,7 @@ namespace OceanExplorer.Module2
                 tracerOff = Time.time + tracerTime;
             }
 
-            // Bulles à l'endroit du clic (point d'impact)
+            // Bulles à l'endroit du tir (point d'impact)
             PlayImpactBubbles(aimPoint);
 
             // Si on a touché un animal, on applique les règles de pêche
@@ -237,8 +327,8 @@ namespace OceanExplorer.Module2
                 var data = hit.collider.GetComponentInParent<SpeciesData>();
                 if (data != null)
                 {
-                    // Seuls les poissons (tag "Fish") sont pêchables
-                    if (!data.CompareTag("Fish"))
+                    // Seuls les animaux pêchables (poissons, crabes) peuvent être pêchés
+                    if (!IsCatchable(data))
                     {
                         Show("<b>" + data.nom + " : non pêchable</b>\n<size=70%>Ce n'est pas une cible de pêche</size>",
                              notCatchableColor);
@@ -255,7 +345,7 @@ namespace OceanExplorer.Module2
                         return;
                     }
 
-                    // Capture : le poisson disparaît et le compteur augmente
+                    // Capture : l'animal disparaît et le compteur augmente
                     string nom = data.nom;
                     float taille = data.taille;
                     Destroy(data.gameObject);

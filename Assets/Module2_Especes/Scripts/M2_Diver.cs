@@ -26,6 +26,17 @@ namespace OceanExplorer.Module2
         public Vector3 tpsPosition = new Vector3(0f, 2.5f, -5f);
         public bool fpsMode = true;
 
+        // [VR] Réglages du mode VR (XR Origin enfant du Diver)
+        [Header("VR (XR Origin)")]
+        [Tooltip("Coché : la caméra est pilotée par le suivi VR/simulateur.")]
+        public bool vrMode = true;
+        [Tooltip("XR Origin (XR Rig), enfant du Diver. Auto-détecté si vide.")]
+        public Transform xrRig;
+        [Tooltip("Position locale du rig dans le Diver (règle la hauteur de la tête).")]
+        public Vector3 vrRigPosition = new Vector3(0f, -1.06f, 1.3f);
+        [Tooltip("Optionnel : action Move du joystick gauche (XRI Left Locomotion/Move).")]
+        public InputActionReference moveAction;
+
         [Header("Panneau d'information")]
         public GameObject infoPanel;
         public TMP_Text infoText;
@@ -44,19 +55,38 @@ namespace OceanExplorer.Module2
             rb.isKinematic = false;
             rb.freezeRotation = true;
 
+            // [VR] Retrouver le rig s'il n'est pas assigné
+            if (xrRig == null) xrRig = transform.Find("XR Origin (XR Rig)");
+
+            // Caméra : MainCamera (celle du rig en mode VR)
             if (cameraTransform == null && Camera.main != null)
                 cameraTransform = Camera.main.transform;
 
-            if (cameraTransform != null)
+            if (vrMode)
             {
+                // [VR] On NE déplace PAS la caméra : le suivi la pilote.
+                // On place seulement le rig (hauteur de la tête) dans le Diver.
+                if (xrRig != null) xrRig.localPosition = vrRigPosition;
+            }
+            else if (cameraTransform != null)
+            {
+                // Mode classique (sans VR) : comme avant
                 cameraTransform.SetParent(transform);
                 var follow = cameraTransform.GetComponent<M2_CameraFollow>();
                 if (follow != null) follow.enabled = false;
             }
 
+            // Renderers du corps du plongeur, SANS ceux du XR Rig (contrôleurs) ni du harpon
+            var fishGun = GetComponent<M2_FishGun>();   // [VR] pour connaître le harpon
             var list = new List<Renderer>();
             foreach (var r in GetComponentsInChildren<Renderer>())
-                if (r.gameObject != gameObject) list.Add(r);
+            {
+                if (r.gameObject == gameObject) continue;
+                if (xrRig != null && r.transform.IsChildOf(xrRig)) continue;           // [VR] rig
+                if (fishGun != null && fishGun.gun != null
+                    && r.transform.IsChildOf(fishGun.gun)) continue;                   // [VR] harpon
+                list.Add(r);
+            }
             bodyRenderers = list.ToArray();
 
             yaw = transform.eulerAngles.y;
@@ -64,8 +94,12 @@ namespace OceanExplorer.Module2
 
             if (infoPanel != null) infoPanel.SetActive(false);
 
-            Cursor.lockState = CursorLockMode.Locked;
-            Cursor.visible = false;
+            // [VR] En VR/simulateur, on laisse le simulateur gérer la souris
+            if (!vrMode)
+            {
+                Cursor.lockState = CursorLockMode.Locked;
+                Cursor.visible = false;
+            }
         }
 
         // Les entrées se lisent dans Update
@@ -81,27 +115,53 @@ namespace OceanExplorer.Module2
                 Cursor.visible = true;
             }
 
-            if (kb.cKey.wasPressedThisFrame)
+            // [VR] Touche C et souris : uniquement hors VR (sinon conflit avec le suivi)
+            if (!vrMode)
             {
-                fpsMode = !fpsMode;
-                ApplyView();
+                if (kb.cKey.wasPressedThisFrame)
+                {
+                    fpsMode = !fpsMode;
+                    ApplyView();
+                }
+
+                if (mouse != null && Cursor.lockState == CursorLockMode.Locked)
+                {
+                    Vector2 d = mouse.delta.ReadValue() * mouseSensitivity;
+                    yaw += d.x;
+                    pitch = Mathf.Clamp(pitch - d.y, -80f, 80f);
+                    if (cameraTransform != null)
+                        cameraTransform.localRotation = Quaternion.Euler(pitch, 0f, 0f);
+                }
             }
 
-            if (mouse != null && Cursor.lockState == CursorLockMode.Locked)
+            float x, z, y;
+            if (vrMode)
             {
-                Vector2 d = mouse.delta.ReadValue() * mouseSensitivity;
-                yaw += d.x;
-                pitch = Mathf.Clamp(pitch - d.y, -80f, 80f);
-                if (cameraTransform != null)
-                    cameraTransform.localRotation = Quaternion.Euler(pitch, 0f, 0f);
+                // [VR] Le simulateur utilise flèches et WASD/QE : on déplace le plongeur
+                // avec I/K (avant/arrière), J/L (gauche/droite), U/O (haut/bas)
+                x = (kb.lKey.isPressed ? 1 : 0) - (kb.jKey.isPressed ? 1 : 0);
+                z = (kb.iKey.isPressed ? 1 : 0) - (kb.kKey.isPressed ? 1 : 0);
+                y = (kb.uKey.isPressed ? 1 : 0) - (kb.oKey.isPressed ? 1 : 0);
+
+                // [VR] Joystick gauche (action Move) : s'ajoute aux touches
+                if (moveAction != null && moveAction.action != null)
+                {
+                    Vector2 stick = moveAction.action.ReadValue<Vector2>();
+                    x += stick.x;
+                    z += stick.y;
+                }
+            }
+            else
+            {
+                x = (kb.rightArrowKey.isPressed ? 1 : 0) - (kb.leftArrowKey.isPressed ? 1 : 0);
+                z = (kb.upArrowKey.isPressed ? 1 : 0) - (kb.downArrowKey.isPressed ? 1 : 0);
+                y = (kb.spaceKey.isPressed ? 1 : 0) - (kb.leftShiftKey.isPressed ? 1 : 0);
             }
 
-            float x = (kb.rightArrowKey.isPressed ? 1 : 0) - (kb.leftArrowKey.isPressed ? 1 : 0);
-            float z = (kb.upArrowKey.isPressed ? 1 : 0) - (kb.downArrowKey.isPressed ? 1 : 0);
-            float y = (kb.spaceKey.isPressed ? 1 : 0) - (kb.leftShiftKey.isPressed ? 1 : 0);
-
+            // On nage dans la direction où la tête regarde
             Transform view = cameraTransform != null ? cameraTransform : transform;
             inputDir = view.forward * z + view.right * x + Vector3.up * y;
+            if (vrMode) inputDir = Vector3.ClampMagnitude(inputDir, 1f); // [VR] vitesse constante
         }
 
         // La physique se calcule dans FixedUpdate
@@ -119,6 +179,14 @@ namespace OceanExplorer.Module2
 
         void ApplyView()
         {
+            // [VR] En VR on cache le corps (vue à la première personne) et on ne touche pas à la caméra
+            if (vrMode)
+            {
+                if (bodyRenderers != null)
+                    foreach (var r in bodyRenderers) r.enabled = false;
+                return;
+            }
+
             if (cameraTransform != null)
                 cameraTransform.localPosition = fpsMode ? fpsPosition : tpsPosition;
 

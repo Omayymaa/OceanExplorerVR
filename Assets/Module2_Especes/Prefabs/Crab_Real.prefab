@@ -15,7 +15,7 @@ GameObject:
   - component: {fileID: 1602219849804121071}
   m_Layer: 0
   m_Name: Crab_Real
-  m_TagString: Species
+  m_TagString: Crab
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0

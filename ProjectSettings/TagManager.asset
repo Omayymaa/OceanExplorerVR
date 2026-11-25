@@ -9,6 +9,7 @@ TagManager:
   - Trash
   - Species
   - Diver
+  - Crab
   layers:
   - Default
   - TransparentFX
