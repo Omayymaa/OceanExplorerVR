@@ -37,7 +37,8 @@ namespace OceanExplorer.Module2
 
         [Header("Son (laisser vide = son généré)")]
         public AudioClip shotSound;        // Son de tir (facultatif)
-        [Range(0f, 1f)] public float volume = 0.8f;
+        [Range(0f, 1f)] public float volume = 1f;   // Volume de lecture (1 = maximum)
+        public float gain = 3f;            // Amplification du son généré (1 = d'origine, 3 = plus fort)
 
         int caught;                        // Nombre de poissons pêchés
         float clearTime;                   // Moment où effacer le message
@@ -119,7 +120,9 @@ namespace OceanExplorer.Module2
                 // 4) Mélange, puis filtre passe-bas fort : l'eau étouffe les aigus
                 float mix = thud + hiss + bubbles;
                 muffled += (mix - muffled) * 0.18f;
-                data[i] = muffled;
+
+                // 5) Amplifie le son, puis limite entre -1 et 1 pour éviter la saturation
+                data[i] = Mathf.Clamp(muffled * gain, -1f, 1f);
             }
 
             var clip = AudioClip.Create("ShotSound", n, 1, rate, false);
@@ -247,6 +250,8 @@ namespace OceanExplorer.Module2
                     {
                         Show("<b>Espèce protégée : " + data.nom + "</b>\n<size=70%>Pêche interdite, l'animal est épargné</size>",
                              protectedColor);
+                        // Guide : message sur les espèces protégées (une seule fois)
+                        if (M2_AudioGuide.Instance != null) M2_AudioGuide.Instance.PlayOnce("protege");
                         return;
                     }
 
@@ -258,6 +263,8 @@ namespace OceanExplorer.Module2
                     UpdateCounter();
                     Show("<b>Pêché : " + nom + "</b>\n<size=70%>Taille : " + taille + " cm - pêche sélective réussie</size>",
                          caughtColor);
+                    // Guide : message de la première prise (une seule fois)
+                    if (M2_AudioGuide.Instance != null) M2_AudioGuide.Instance.PlayOnce("peche");
                     return;
                 }
             }
